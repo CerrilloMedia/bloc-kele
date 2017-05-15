@@ -9,7 +9,12 @@ include HTTParty
         sessionsURL = 'https://www.bloc.io/api/v1/sessions'
         @base_url = 'https://www.bloc.io/api/v1'
         response = self.class.post(sessionsURL, options)
-        @authToken = response["auth_token"]
+        if response["auth_token"]
+            @auth_token = response["auth_token"]
+        else
+            @errors = response["message"]
+        end
     end
+    
     
 end
