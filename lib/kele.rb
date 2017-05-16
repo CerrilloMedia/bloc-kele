@@ -1,4 +1,5 @@
 require 'httparty'
+require 'json'
 
 class Kele
     
@@ -16,5 +17,10 @@ include HTTParty
         end
     end
     
+    def get_me
+        url = @base_url + '/users/me'
+        @response = self.class.get(url, headers: { "authorization" => @auth_token } )
+        JSON.parse(@response.body)
+    end
     
 end
