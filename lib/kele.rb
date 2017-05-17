@@ -10,17 +10,23 @@ include HTTParty
         sessionsURL = 'https://www.bloc.io/api/v1/sessions'
         @base_url = 'https://www.bloc.io/api/v1'
         response = self.class.post(sessionsURL, options)
-        if response["auth_token"]
-            @auth_token = response["auth_token"]
-        else
-            @errors = response["message"]
-        end
+        @auth_token = response["auth_token"]
     end
     
     def get_me
         url = @base_url + '/users/me'
-        @response = self.class.get(url, headers: { "authorization" => @auth_token } )
-        JSON.parse(@response.body)
+        response = self.class.get(url, headers: { "authorization" => @auth_token } )
+        parsed_response = JSON.parse(response.body)
+    end
+    
+    def get_mentor_availability(id)
+       url = @base_url + "/mentors/#{id}/student_availability"
+       response = self.class.get(url, headers: { "authorization" => @auth_token } )
+       parsed_response = JSON.parse(response.body)
+       
+       parsed_response.select do |slot|
+          slot["booked"] == nil
+       end
     end
     
 end
