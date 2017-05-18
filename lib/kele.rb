@@ -1,9 +1,11 @@
 require 'httparty'
 require 'json'
+require_relative 'roadmap'
 
 class Kele
     
 include HTTParty
+include RoadMap
 
     def initialize(email, password)
         options = { query: { email: email, password: password } }
@@ -15,16 +17,15 @@ include HTTParty
     
     def get_me
         url = @base_url + '/users/me'
-        response = self.class.get(url, headers: { "authorization" => @auth_token } )
-        parsed_response = JSON.parse(response.body)
+        convert_to_ruby(url)
     end
     
     def get_mentor_availability(id)
-       url = @base_url + "/mentors/#{id}/student_availability"
-       response = self.class.get(url, headers: { "authorization" => @auth_token } )
-       parsed_response = JSON.parse(response.body)
-       
-       parsed_response.select do |slot|
+        url = @base_url + "/mentors/#{id.to_i}/student_availability"
+        
+        parsed_response = convert_to_ruby(url)
+        
+        parsed_response.select do |slot|
           slot["booked"] == nil
        end
     end
