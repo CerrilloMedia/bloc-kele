@@ -39,13 +39,4 @@ module RoadMap
             parsed_response["message"]
         end
     end
-    
-    # https://www.bloc.io/users/armando-cerrillo/checkpoints/2160?roadmap_section_id=157
-    
-    private
-    
-    def convert_to_ruby(url)
-        response = self.class.get(url, headers: { "authorization" => @auth_token } )
-        JSON.parse(response.body)
-    end
 end

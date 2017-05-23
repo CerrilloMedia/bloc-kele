@@ -1,11 +1,13 @@
 require 'httparty'
 require 'json'
 require_relative 'roadmap'
+require_relative 'messaging'
 
 class Kele
     
 include HTTParty
 include RoadMap
+include Messaging
 
     def initialize(email, password)
         options = { query: { email: email, password: password } }
@@ -28,6 +30,13 @@ include RoadMap
         parsed_response.select do |slot|
           slot["booked"] == nil
        end
+    end
+    
+    private
+    
+    def convert_to_ruby(url)
+        response = self.class.get(url, headers: { "authorization" => @auth_token } )
+        JSON.parse(response.body)
     end
     
 end
