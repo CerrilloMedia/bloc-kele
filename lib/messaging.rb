@@ -10,17 +10,17 @@ module Messaging
         
         if page == 0
             
-            parsed_response = convert_to_ruby(url)
+            parsed_response = parse_to_ruby(url)
             count = parsed_response["count"]
             
             until messages.count >= count
                 page += 1
-                parsed_response = convert_to_ruby(url+"page=#{page}")
+                parsed_response = parse_to_ruby(url+"page=#{page}")
                 messages << parsed_response["items"]
                 messages.flatten! #message objects remain intact
             end
         else
-            parsed_response = convert_to_ruby("#{url}page=#{page}")
+            parsed_response = parse_to_ruby("#{url}page=#{page}")
             messages = parsed_response["items"]
         end
         
@@ -31,7 +31,7 @@ module Messaging
     
     def create_message(sender, recipient_id, message_body, *args)
         
-        puts options = {
+        options = {
             query: {
                 "sender" => sender,
                 "recipient_id" => recipient_id,
